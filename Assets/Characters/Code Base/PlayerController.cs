@@ -67,9 +67,18 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	private Stack<BodyPartController> player1bodyparts = new Stack<BodyPartController>();
 	private Stack<BodyPartController> player2bodyparts = new Stack<BodyPartController>();
 
+	public Animator CharacterAnim1;
+	public Animator CharacterAnim2;
+
+	private bool player1anim;
+	private bool player2anim;
+
+
 	private void Awake() {
 		player1physics.@delegate = this;
 		player2physics.@delegate = this;
+
+
 	}
 
 	#region Player Physics Delegate
@@ -94,6 +103,30 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 			player1connectionTargets.Add(player_physics);
 			return;
 		}
+	}
+
+
+	 private void Update() {
+
+
+		 if(player1anim){
+			 CharacterAnim1.SetBool("walk", true);
+		 } else{
+			 CharacterAnim1.SetBool("walk", false);
+		 }
+		if (player1rigidbody.velocity.magnitude < 3.5 ){
+			player1anim = false;
+		}
+		 if(player2anim){
+			 CharacterAnim2.SetBool("walk", true);
+		 } else{
+			 CharacterAnim2.SetBool("walk", false);
+		 }
+		if (player2rigidbody.velocity.magnitude < 3.5 ){
+			player2anim = false;
+		}
+		
+
 	}
 
 	void PlayerPhysicsDelegate.OnTriggerExit(Rigidbody source, Collider other) {
@@ -125,6 +158,9 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 		if (connectionState == PlayerConnectionState.Disconnected || connectionState == PlayerConnectionState.ConnectedPlayer1Lead) {
 			var direction = value.Get<Vector2>();
 			Move(direction, acceleration_1, topSpeed_1, player1rigidbody, clamp: true);
+			player1anim = true;
+
+			
 		}
 	}
 
@@ -132,6 +168,8 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 		if (connectionState == PlayerConnectionState.Disconnected || connectionState == PlayerConnectionState.ConnectedPlayer2Lead) {
 			var direction = value.Get<Vector2>();
 			Move(direction, acceleration_2, topSpeed_2, player2rigidbody, clamp: !isDashing);
+			player2anim = true;
+
 		}
 	}
 
@@ -223,10 +261,14 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 		var velocity = rigidbody.velocity;
 		if (clamp) {
 			velocity.x = Mathf.Clamp(velocity.x, -topSpeed, topSpeed);
+			
 		}
 		else {
 			velocity.x = Mathf.Clamp(velocity.x, -topSpeedDashing, topSpeedDashing);
+
 		}
+
+		
 		rigidbody.velocity = velocity;
 	}
 

@@ -30,7 +30,7 @@ public class CameraFollow : MonoBehaviour
          
 
         if(distance > 16.9f){     
-        MainCamera.orthographicSize = Mathf.Lerp(MainCamera.orthographicSize, 7.5f, 0.1f);
+        MainCamera.orthographicSize = Mathf.Lerp(MainCamera.orthographicSize, 8.5f, 0.1f);
         } else {
             MainCamera.orthographicSize = Mathf.Lerp(MainCamera.orthographicSize, cameraSize, 0.1f);
         }
