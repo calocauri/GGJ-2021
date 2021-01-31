@@ -29,14 +29,14 @@ namespace Interactables
         private void SetRotA() => eulerRotationA = transform.rotation.eulerAngles;
         private void SetRotB() => eulerRotationB = transform.rotation.eulerAngles;
 
-        public IEnumerator Activate(bool reverse)
+        public Coroutine Run()
         {
             switch (type)
             {
                 case Type.Slide:
-                    return BeginSlide();
+                    return StartCoroutine(BeginSlide());
                 case Type.Rotate:
-                    return BeginRotate();
+                    return StartCoroutine(BeginRotate());
                 case Type.Break:
                     break;
             }

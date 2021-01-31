@@ -443,14 +443,28 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 		}
 	}
 
+	public void RecoverBodyparts(Rigidbody rigidbody, ref List<BodyPartController> bodyParts)
+	{
+		PlayerId caller = rigidbody.Equals(player1rigidbody) ? PlayerId.Player1 : PlayerId.Player2;
+		Debug.Log(bodyParts.Count);
+		foreach (var part in bodyParts)
+		{
+			ConnectBodyPart(caller, part);
+			Debug.Log("connected body part");
+		}
+		bodyParts.Clear();
+	}
 	private void ConnectBodyPart(PlayerId caller, BodyPartController bodyPart) {
 		if (caller == PlayerId.Player1) {
 			player1bodyparts.Push(bodyPart);
-			bodyPart.gameObject.SetActive(false);
+			// bodyPart.gameObject.SetActive(false);
+			bodyPart.AttachTo(player1rigidbody);
 		}
-		else {
+		else
+		{
 			player2bodyparts.Push(bodyPart);
-			bodyPart.gameObject.SetActive(false);
+			// bodyPart.gameObject.SetActive(false);
+			bodyPart.AttachTo(player1rigidbody);
 		}
 	}
 
@@ -473,24 +487,16 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 		}
 	}
 
-	private void DisconnectBodyPart(PlayerId caller) {
-		if (caller == PlayerId.Player1) {
-			var body_part = player1bodyparts.Pop();
-			body_part.gameObject.SetActive(true);
-			SpawnCloseTo(body_part.transform, player1rigidbody.transform);
-		}
-		else if (caller == PlayerId.Player2) {
-			var body_part = player2bodyparts.Pop();
-			body_part.gameObject.SetActive(true);
-			SpawnCloseTo(body_part.transform, player2rigidbody.transform);
-		}
-
-		void SpawnCloseTo(Transform spawned, Transform source) {
-			var angle = Random.Range(-1f, 1f);
-			Vector3 position = (new Vector3(Mathf.Sin(angle), Mathf.Cos(angle)) * 1.1f) + source.position;
-			spawned.position = position;
-			spawned.gameObject.SetActive(true);
-		}
+	public void ReleaseBodyParts(Rigidbody rigidbody, Nest nest)
+	{
+		PlayerId caller = rigidbody.Equals(player1rigidbody) ? PlayerId.Player1 : PlayerId.Player2;
+		while ( (caller == PlayerId.Player1 ? player1bodyparts : player2bodyparts).Count > 0) DisconnectBodyPart(caller, nest);
+	}
+	private void DisconnectBodyPart(PlayerId caller, Nest nest = null)
+	{
+		var body_part = caller == PlayerId.Player1 ? player1bodyparts.Pop() : player2bodyparts.Pop();
+		if (nest) nest.Attach(body_part);
+		else body_part.AttachTo(null);
 	}
 
 	private IEnumerator CSlowdownTimeIn() {
