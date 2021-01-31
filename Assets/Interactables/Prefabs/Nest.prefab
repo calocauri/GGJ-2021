@@ -10,9 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 297328762329825877}
   - component: {fileID: 1171637871989027736}
-  - component: {fileID: 8796710852692077821}
-  - component: {fileID: 8355186963142713086}
-  - component: {fileID: 2438825838430297327}
   - component: {fileID: 6305158339019011962}
   m_Layer: 0
   m_Name: Nest
@@ -47,46 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a53e7355eaf864a89651ee1e93222b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredParts: 0
---- !u!65 &8796710852692077821
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297328762329825876}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.1, y: 1, z: 1}
-  m_Center: {x: -0.45, y: 0, z: 0}
---- !u!65 &8355186963142713086
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297328762329825876}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.1, y: 1, z: 1}
-  m_Center: {x: 0.45, y: 0, z: 0}
---- !u!65 &2438825838430297327
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297328762329825876}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.1, z: 1}
-  m_Center: {x: 0, y: -0.45, z: 0}
+  player: {fileID: 0}
+  requiredParts: 3
+  increment: 0.5
+  bodyParts: []
+  activation: {fileID: 0}
 --- !u!65 &6305158339019011962
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -98,5 +60,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.2, y: 1, z: 1}
+  m_Size: {x: 5, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
