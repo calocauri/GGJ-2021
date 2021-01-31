@@ -27,7 +27,7 @@
                     "id": "0d413f9e-71c7-4227-93f3-3c4089d17d05",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press(behavior=2)"
                 },
                 {
                     "name": "Dash",
@@ -35,7 +35,7 @@
                     "id": "262218b0-b1e3-4799-a7e7-b45fe25e58c3",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press(behavior=2)"
                 },
                 {
                     "name": "DPad",
@@ -65,6 +65,14 @@
                     "name": "Swap",
                     "type": "Button",
                     "id": "86ad89dd-4f2a-4836-a371-8a730210b6cc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Rock",
+                    "type": "Button",
+                    "id": "c66069be-b7f6-49b5-addf-ee1e31d80e43",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -156,6 +164,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Swap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d3206fa4-e518-4f5a-a447-c442dcf82e23",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Rock",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

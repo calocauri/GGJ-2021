@@ -20,25 +20,38 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	[SerializeField] private float connectDistance = 2f;
 	[SerializeField] private float swapCooldown = 0.5f;
 
+	[Header("Time Slowdown")]
+	[SerializeField] private AnimationCurve timeSlowdownInCurve;
+	[SerializeField] private float slowdownInDuration;
+	[SerializeField] private AnimationCurve timeSlowdownOutCurve;
+	[SerializeField] private float slowdownOutDuration;
+
 	[Header("Player 1 Settings")]
 	[SerializeField] private float acceleration_1 = 70f;
 	[SerializeField] private float topSpeed_1 = 5f;
-	[SerializeField] private float jumpImpulse = 100f;
+	[SerializeField] private float jumpMinImpulse = 7f;
+	[SerializeField] private float jumpMaxImpulse = 20f;
+	[SerializeField] private float jumpMaxCharge = 1f;
 
 	[Header("Player 2 Settings")]
 	[SerializeField] private float acceleration_2 = 50f;
 	[SerializeField] private float topSpeed_2 = 4f;
-	[SerializeField] private float dashImpulse = 100f;
+	[SerializeField] private float dashMinImpulse = 10f;
+	[SerializeField] private float dashMaxImpulse = 30f;
 	[SerializeField] private float dashDuration = 2f;
 	[SerializeField] private float topSpeedDashing = 7.5f;
+	[SerializeField] private float dashMaxCharge = 1f;
+	[SerializeField] private float rockImpulse = 30f;
 
 	[Header("Player 1 Refs")]
 	[SerializeField] private Rigidbody player1rigidbody;
 	[SerializeField] private PlayerPhysics player1physics;
+	[SerializeField] private Material player1material;
 
 	[Header("Player 2 Refs")]
 	[SerializeField] private Rigidbody player2rigidbody;
 	[SerializeField] private PlayerPhysics player2physics;
+	[SerializeField] private Material player2material;
 
 	[Header("Physics")]
 	[SerializeField] private LayerMask walkableLayer;
@@ -46,8 +59,8 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	private float distanceToFloor_1 = 0f;
 	private float distanceToFloor_2 = 0f;
 
-	private bool isJumping_1 => distanceToFloor_1 > 0.01f;
-	private bool isJumping_2 => distanceToFloor_2 > 0.01f;
+	private bool isJumping_1 => distanceToFloor_1 > 0.1f;
+	private bool isJumping_2 => distanceToFloor_2 > 0.1f;
 
 	private bool isDashing;
 	private IEnumerator dashTimer;
@@ -73,12 +86,22 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	private bool player1anim;
 	private bool player2anim;
 
+	private bool isJumpCharging;
+	private IEnumerator jumpCharger;
+	private float jumpCharge;
+
+	private bool isDashCharging;
+	private IEnumerator dashCharger;
+	private float dashCharge;
+
+	private bool isRock;
+	public bool IsRock => isRock;
+
+	private IEnumerator timeSlowdownAnimation;
 
 	private void Awake() {
 		player1physics.@delegate = this;
 		player2physics.@delegate = this;
-
-
 	}
 
 	#region Player Physics Delegate
@@ -106,27 +129,26 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	}
 
 
-	 private void Update() {
-
-
-		 if(player1anim){
-			 CharacterAnim1.SetBool("walk", true);
-		 } else{
-			 CharacterAnim1.SetBool("walk", false);
-		 }
-		if (player1rigidbody.velocity.magnitude < 3.5 ){
+	private void Update() {
+		if (player1anim) {
+			CharacterAnim1.SetBool("walk", true);
+		}
+		else {
+			CharacterAnim1.SetBool("walk", false);
+		}
+		if (player1rigidbody.velocity.magnitude < 3.5) {
 			player1anim = false;
 		}
-		 if(player2anim){
-			 CharacterAnim2.SetBool("walk", true);
-		 } else{
-			 CharacterAnim2.SetBool("walk", false);
-		 }
-		if (player2rigidbody.velocity.magnitude < 3.5 ){
+
+		if (player2anim) {
+			CharacterAnim2.SetBool("walk", true);
+		}
+		else {
+			CharacterAnim2.SetBool("walk", false);
+		}
+		if (player2rigidbody.velocity.magnitude < 3.5) {
 			player2anim = false;
 		}
-		
-
 	}
 
 	void PlayerPhysicsDelegate.OnTriggerExit(Rigidbody source, Collider other) {
@@ -159,8 +181,6 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 			var direction = value.Get<Vector2>();
 			Move(direction, acceleration_1, topSpeed_1, player1rigidbody, clamp: true);
 			player1anim = true;
-
-			
 		}
 	}
 
@@ -169,20 +189,91 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 			var direction = value.Get<Vector2>();
 			Move(direction, acceleration_2, topSpeed_2, player2rigidbody, clamp: !isDashing);
 			player2anim = true;
-
 		}
 	}
 
-	public void OnJump() {
-		if (!isJumping_1) {
-			Jump();
+	public void OnJump(InputValue value) {
+		if (!isJumping_1 && connectionState != PlayerConnectionState.ConnectedPlayer2Lead) {
+			if (value.isPressed) {
+				isJumpCharging = true;
+				jumpCharger = CJumpCharge();
+				StartCoroutine(jumpCharger);
+			}
+			else {
+				isJumpCharging = false;
+				if (jumpCharger != null) StopCoroutine(jumpCharger);
+				Jump();
+				jumpCharge = 0f;
+				player1material.SetFloat($"_Charge", 0f);
+			}
+		}
+
+		IEnumerator CJumpCharge() {
+			while (isJumpCharging) {
+				jumpCharge += Time.unscaledDeltaTime;
+				jumpCharge = Mathf.Clamp(jumpCharge, 0f, jumpMaxCharge);
+				player1material.SetFloat($"_Charge", jumpCharge / jumpMaxCharge);
+				yield return null;
+			}
+			jumpCharger = null;
 		}
 	}
 
-	public void OnDash() {
-		if (!isDashing) {
-			isDashing = true;
-			Dash();
+	public void OnDash(InputValue value) {
+		if (!isDashing && connectionState != PlayerConnectionState.ConnectedPlayer1Lead) {
+			if (value.isPressed) {
+				isDashCharging = true;
+				dashCharger = CDashCharge();
+				StartCoroutine(dashCharger);
+
+				// if (timeSlowdownAnimation != null) StopCoroutine(timeSlowdownAnimation);
+				// timeSlowdownAnimation = CSlowdownTimeIn();
+				// StartCoroutine(timeSlowdownAnimation);
+
+				var velocity = player2rigidbody.velocity;
+				velocity.y *= 0f;
+				player2rigidbody.velocity = velocity;
+				player2rigidbody.useGravity = false;
+				// player2rigidbody.isKinematic = true;
+			}
+			else {
+				isDashCharging = false;
+				player2rigidbody.useGravity = true;
+
+				StopCoroutine(dashCharger);
+				isDashing = true;
+				Dash();
+				dashCharge = 0f;
+				player2material.SetFloat($"_Charge", 0f);
+
+				// if (timeSlowdownAnimation != null) StopCoroutine(timeSlowdownAnimation);
+				// timeSlowdownAnimation = CSlowdownTimeOut();
+				// StartCoroutine(timeSlowdownAnimation);
+			}
+		}
+
+		IEnumerator CDashCharge() {
+			while (isDashCharging) {
+				dashCharge += Time.unscaledDeltaTime;
+				dashCharge = Mathf.Clamp(dashCharge, 0f, dashMaxCharge);
+				player2material.SetFloat($"_Charge", dashCharge / dashMaxCharge);
+				yield return null;
+			}
+			jumpCharger = null;
+		}
+	}
+
+	public void OnRock(InputValue value) {
+		if (value.isPressed) {
+			isRock = !isRock;
+
+			if (isRock) {
+				if (isJumping_2) {
+					RockDown();
+				}
+			}
+
+			// Set rock graphic here!!!
 		}
 	}
 
@@ -255,30 +346,41 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 
 	private void Move(Vector2 direction, float acceleration, float topSpeed, Rigidbody rigidbody, bool clamp) {
 		var horizontal = Vector3.right * direction.x * acceleration * Time.fixedDeltaTime;
-		if (isJumping_1) horizontal *= airModifier;
+
+		if (rigidbody == player2rigidbody && isDashCharging && isJumping_2) {
+			horizontal *= 0.01f;
+		}
+
+		if (rigidbody == player2rigidbody && isDashing) {
+			return;
+		}
+
+		if (rigidbody == player1rigidbody && isJumping_1) horizontal *= airModifier;
+		if (rigidbody == player2rigidbody && isJumping_2) horizontal *= airModifier;
+
 		rigidbody.AddForce(horizontal, ForceMode.Impulse);
 
 		var velocity = rigidbody.velocity;
 		if (clamp) {
 			velocity.x = Mathf.Clamp(velocity.x, -topSpeed, topSpeed);
-			
 		}
 		else {
 			velocity.x = Mathf.Clamp(velocity.x, -topSpeedDashing, topSpeedDashing);
-
 		}
 
-		
+
 		rigidbody.velocity = velocity;
 	}
 
 	private void Jump() {
-		var vertical = transform.up * jumpImpulse;
+		var impulse = Mathf.Lerp(jumpMinImpulse, jumpMaxImpulse, (jumpCharge / jumpMaxCharge));
+		var vertical = transform.up * impulse;
 		player1rigidbody.AddForce(vertical, ForceMode.Impulse);
 	}
 
 	private void Dash() {
-		var horizontal = player2rigidbody.transform.right * dashImpulse;
+		var impulse = Mathf.Lerp(dashMinImpulse, dashMaxImpulse, (dashCharge / dashMaxCharge));
+		var horizontal = player2rigidbody.transform.right * impulse;
 		player2rigidbody.AddForce(horizontal, ForceMode.Impulse);
 
 		dashTimer = CDashTimer();
@@ -290,6 +392,12 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 			isDashing = false;
 			dashTimer = null;
 		}
+	}
+
+	private void RockDown() {
+		var impulse = rockImpulse;
+		var vertical = Vector3.down * impulse;
+		player2rigidbody.AddForce(vertical, ForceMode.Impulse);
 	}
 
 	private void Swap() {
@@ -382,6 +490,46 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 			Vector3 position = (new Vector3(Mathf.Sin(angle), Mathf.Cos(angle)) * 1.1f) + source.position;
 			spawned.position = position;
 			spawned.gameObject.SetActive(true);
+		}
+	}
+
+	private IEnumerator CSlowdownTimeIn() {
+		float elapsed = 0f;
+		float duration = slowdownInDuration;
+
+		float initial_time_scale = Time.timeScale;
+		float final_time_scale = 0f;
+
+		while (elapsed < duration) {
+			float t = timeSlowdownInCurve.Evaluate(elapsed / duration);
+			SetValues(t);
+			elapsed += Time.unscaledDeltaTime;
+			yield return null;
+		}
+		SetValues(1f);
+
+		void SetValues(float t) {
+			Time.timeScale = Mathf.Lerp(initial_time_scale, final_time_scale, t);
+		}
+	}
+
+	private IEnumerator CSlowdownTimeOut() {
+		float elapsed = 0f;
+		float duration = slowdownOutDuration;
+
+		float initial_time_scale = Time.timeScale;
+		float final_time_scale = 1f;
+
+		while (elapsed < duration) {
+			float t = timeSlowdownOutCurve.Evaluate(elapsed / duration);
+			SetValues(t);
+			elapsed += Time.unscaledDeltaTime;
+			yield return null;
+		}
+		SetValues(1f);
+
+		void SetValues(float t) {
+			Time.timeScale = Mathf.Lerp(initial_time_scale, final_time_scale, t);
 		}
 	}
 }

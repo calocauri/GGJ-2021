@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Player1
   m_Shader: {fileID: -6465566751694194690, guid: f212ea028197e7b42b38d9c123fe48c3, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -76,9 +76,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Boolean_fb721ca0f09c471fb6176006f1d183e2: 1
+    - Vector1_9362fcafa3684d9a91f9b1b84fc68b0c: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
+    - _Charge: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -103,8 +106,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_0d08fed34df84b329951484d236a9737: {r: 0, g: 0, b: 1, a: 1}
-    - Color_41918c7c2a1c4dc0949368a6964a9a83: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
+    - Color_0d08fed34df84b329951484d236a9737: {r: 1, g: 0.9894633, b: 0, a: 1}
+    - Color_41918c7c2a1c4dc0949368a6964a9a83: {r: 1, g: 1, b: 1, a: 1}
+    - Color_97626994fbcf47ac8021ef936075f027: {r: 0.8041316, g: 1, b: 0, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
