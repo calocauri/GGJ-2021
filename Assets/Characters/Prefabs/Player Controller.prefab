@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1286613421580968196}
   - component: {fileID: 1286613421580968218}
   - component: {fileID: 1286613421580968219}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HitFloor1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4873,7 +4873,7 @@ GameObject:
   - component: {fileID: 1286613421853010477}
   - component: {fileID: 1286613421853010476}
   - component: {fileID: 1286613421853010467}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Graphic Character 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5175,7 +5175,7 @@ GameObject:
   - component: {fileID: 1286613422385130209}
   - component: {fileID: 1286613422385130215}
   - component: {fileID: 1286613422385130208}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trail Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9979,7 +9979,7 @@ GameObject:
   - component: {fileID: 1286613422423914047}
   - component: {fileID: 1286613422423914046}
   - component: {fileID: 1286613422423914045}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Graphic Character 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10083,7 +10083,7 @@ GameObject:
   - component: {fileID: 1286613422578667724}
   - component: {fileID: 1286613422578667714}
   - component: {fileID: 1286613422578667713}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10171,7 +10171,7 @@ GameObject:
   - component: {fileID: 1286613422999971806}
   - component: {fileID: 1286613422999971804}
   - component: {fileID: 1286613422999971805}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HitFloor2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15035,7 +15035,7 @@ GameObject:
   - component: {fileID: 1286613423014914596}
   - component: {fileID: 1286613423014914599}
   - component: {fileID: 1286613423014914597}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

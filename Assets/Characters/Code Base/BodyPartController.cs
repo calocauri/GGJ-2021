@@ -21,6 +21,10 @@ public class BodyPartController : MonoBehaviour, Connectable {
 		rigidbody.AddForce(-Physics.gravity);
 	}
 
+	private void Update() {
+		if(!joint.connectedBody) joint.connectedAnchor = transform.position;
+	}
+
 	public void AttachTo(Rigidbody rigidbody)
 	{
 		if (rigidbody)
