@@ -59,8 +59,8 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	private float distanceToFloor_1 = 0f;
 	private float distanceToFloor_2 = 0f;
 
-	private bool isJumping_1 => distanceToFloor_1 > 0.1f;
-	private bool isJumping_2 => distanceToFloor_2 > 0.1f;
+	private bool isJumping_1 => distanceToFloor_1 > 0.15f;
+	private bool isJumping_2 => distanceToFloor_2 > 0.15f;
 
 	private bool isDashing;
 	private IEnumerator dashTimer;
@@ -71,6 +71,8 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	private WaitForSeconds swapWaiter;
 
 	private PlayerConnectionState connectionState;
+	public PlayerConnectionState ConnectionState => connectionState;
+
 	private List<Connectable> player1connectionTargets = new List<Connectable>();
 	private Connectable player1connectionTarget => player1connectionTargets[player1connectionTargets.Count - 1];
 
@@ -128,7 +130,6 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 		}
 	}
 
-
 	private void Update() {
 		if (player1anim) {
 			CharacterAnim1.SetBool("walk", true);
@@ -149,6 +150,8 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 		if (player2rigidbody.velocity.magnitude < 3.5) {
 			player2anim = false;
 		}
+
+		print($"distance to floor: {distanceToFloor_1}");
 	}
 
 	void PlayerPhysicsDelegate.OnTriggerExit(Rigidbody source, Collider other) {
@@ -193,8 +196,8 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 	}
 
 	public void OnJump(InputValue value) {
-		if (!isJumping_1 && connectionState != PlayerConnectionState.ConnectedPlayer2Lead) {
-			if (value.isPressed) {
+		if (connectionState != PlayerConnectionState.ConnectedPlayer2Lead) {
+			if (value.isPressed && !isJumping_1) {
 				isJumpCharging = true;
 				jumpCharger = CJumpCharge();
 				StartCoroutine(jumpCharger);
@@ -202,7 +205,7 @@ public class PlayerController : MonoBehaviour, PlayerPhysicsDelegate {
 			else {
 				isJumpCharging = false;
 				if (jumpCharger != null) StopCoroutine(jumpCharger);
-				Jump();
+				if (!isJumping_1) Jump();
 				jumpCharge = 0f;
 				player1material.SetFloat($"_Charge", 0f);
 			}
