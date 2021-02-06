@@ -5726,6 +5726,11 @@ Transform:
   m_Father: {fileID: 1330134840}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1.633}
+--- !u!1 &641880537 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1286613422578667725, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
+  m_PrefabInstance: {fileID: 1286613422409407627}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &805041837 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1286613423014914598, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
@@ -6190,6 +6195,11 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!1 &1030105105 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1286613423014914592, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
+  m_PrefabInstance: {fileID: 1286613422409407627}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1054716905
 GameObject:
   m_ObjectHideFlags: 0
@@ -13319,7 +13329,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2103292053}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ee69b3add1510a468b9e7d773e51032, type: 3}
   m_Name: 
@@ -13328,7 +13338,9 @@ MonoBehaviour:
   camTransform: {fileID: 2103292056}
   Target1: {fileID: 805041837}
   Target2: {fileID: 368790603}
-  height: 3.8
+  height: 5
+  Player1: {fileID: 1030105105}
+  Player2: {fileID: 641880537}
 --- !u!114 &2130314303 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1286613421861213063, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
@@ -13394,6 +13406,14 @@ PrefabInstance:
     - target: {fileID: 1286613421861213057, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
       propertyPath: m_Name
       value: Player Controller
+      objectReference: {fileID: 0}
+    - target: {fileID: 1286613422409407629, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
+      propertyPath: m_Size.x
+      value: 1.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1286613422409407631, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
+      propertyPath: m_Size.x
+      value: 1.09
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d069cdbc65c796479ee71fc06119c82, type: 3}
